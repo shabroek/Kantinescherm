@@ -1,6 +1,4 @@
-using System;
-
-namespace DotNetCoreSqlDb.Models
+namespace JongBrabant.Kantinescherm.Models
 {
     public class ErrorViewModel
     {

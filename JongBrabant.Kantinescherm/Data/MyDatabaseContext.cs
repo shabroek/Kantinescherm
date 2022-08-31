@@ -1,7 +1,7 @@
-﻿using DotNetCoreSqlDb.Models;
+﻿using JongBrabant.Kantinescherm.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DotNetCoreSqlDb.Data
+namespace JongBrabant.Kantinescherm.Data
 {
     public class MyDatabaseContext : DbContext
     {
