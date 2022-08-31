@@ -1,0 +1,31 @@
+﻿@model JongBrabant.Kantinescherm.Models.PriceList
+
+@{
+	ViewData["Title"] = "Prijslijst Jong Brabant";
+}
+
+<h1>Dranken</h1>
+
+<table class="table">
+	<tbody>
+		@foreach (var item in Model.Groups)
+		{
+			<tr>
+				<td colspan="2">
+					@Html.DisplayFor(modelItem => item.GroupName)
+				</td>
+			</tr>
+			@foreach (var price in item.Prices)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => price.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => price.Price)
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>
