@@ -22,7 +22,7 @@ namespace JongBrabant.Kantinescherm
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<MyDatabaseContext>(options =>
+            services.AddDbContext<PriceListContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
         }
 
@@ -32,7 +32,7 @@ namespace JongBrabant.Kantinescherm
             // migrate any database changes on startup (includes initial db creation)
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                var dataContext = scope.ServiceProvider.GetRequiredService<MyDatabaseContext>();
+                var dataContext = scope.ServiceProvider.GetRequiredService<PriceListContext>();
                 dataContext.Database.Migrate();
             }
 
@@ -58,7 +58,7 @@ namespace JongBrabant.Kantinescherm
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Todos}/{action=Index}/{id?}");
+                    pattern: "{controller=Prices}/{action=Index}/{id?}");
             });
         }
     }

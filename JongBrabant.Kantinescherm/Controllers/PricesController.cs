@@ -9,75 +9,57 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JongBrabant.Kantinescherm.Controllers
 {
-    public class TodosController : Controller
+    public class PricesController : Controller
     {
-        private readonly MyDatabaseContext _context;
+        private readonly PriceListContext _context;
 
-        public TodosController(MyDatabaseContext context)
+        public PricesController(PriceListContext context)
         {
             _context = context;
         }
 
-        // GET: Todos
+        // GET: Prices
         public async Task<IActionResult> Index()
         {
-            var todos = new List<Todo>();
+            var prices = new List<PriceEntry>();
 
             // This allows the home page to load if migrations have not been run yet.
             try
             {
-                todos = await _context.Todo.ToListAsync();
+                prices = await _context.Prices.ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
-                return View(todos);
+                return View(prices);
             }
 
-            return View(todos);
+            return View(prices);
         }
 
-        // GET: Todos/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var todo = await _context.Todo
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (todo == null)
-            {
-                return NotFound();
-            }
-
-            return View(todo);
-        }
-
-        // GET: Todos/Create
+        // GET: Prices/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Todos/Create
+        // POST: Prices/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Description,CreatedDate")] Todo todo)
+        public async Task<IActionResult> Create([Bind("Name,Price")] PriceEntry price)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(todo);
+                _context.Add(price);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(todo);
+
+            return View(price);
         }
 
-        // GET: Todos/Edit/5
+        // GET: Prices/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -85,22 +67,22 @@ namespace JongBrabant.Kantinescherm.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todo.FindAsync(id);
-            if (todo == null)
+            var price = await _context.Prices.FindAsync(id);
+            if (price == null)
             {
                 return NotFound();
             }
-            return View(todo);
+            return View(price);
         }
 
-        // POST: Todos/Edit/5
+        // POST: Prices/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Description,CreatedDate")] Todo todo)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,PriceId")] PriceEntry price)
         {
-            if (id != todo.ID)
+            if (id != price.PriceId)
             {
                 return NotFound();
             }
@@ -109,12 +91,12 @@ namespace JongBrabant.Kantinescherm.Controllers
             {
                 try
                 {
-                    _context.Update(todo);
+                    _context.Update(price);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TodoExists(todo.ID))
+                    if (!PriceExists(price.PriceId))
                     {
                         return NotFound();
                     }
@@ -125,10 +107,10 @@ namespace JongBrabant.Kantinescherm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(todo);
+            return View(price);
         }
 
-        // GET: Todos/Delete/5
+        // GET: Prices/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -136,30 +118,33 @@ namespace JongBrabant.Kantinescherm.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todo
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (todo == null)
+            var price = await _context.Prices
+                .FirstOrDefaultAsync(m => m.PriceId == id);
+            if (price == null)
             {
                 return NotFound();
             }
 
-            return View(todo);
+            return View(price);
         }
 
-        // POST: Todos/Delete/5
+        // POST: Prices/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var todo = await _context.Todo.FindAsync(id);
-            _context.Todo.Remove(todo);
-            await _context.SaveChangesAsync();
+            var price = await _context.Prices.FindAsync(id);
+            if (price != null)
+            {
+                _context.Prices.Remove(price);
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TodoExists(int id)
+        private bool PriceExists(int id)
         {
-            return _context.Todo.Any(e => e.ID == id);
+            return _context.Prices.Any(e => e.PriceId == id);
         }
     }
 }
