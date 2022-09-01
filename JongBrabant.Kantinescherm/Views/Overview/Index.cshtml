@@ -2,30 +2,87 @@
 
 @{
 	ViewData["Title"] = "Prijslijst Jong Brabant";
-}
+}<div class="row">
 
-<h1>Dranken</h1>
+	<div class="col">
+		<table class="table-borderless">
+			<tbody>
+				@foreach (var item in Model.Columns1.Groups)
+				{
+					<tr>
+						<td colspan="2" class="group-header">
+							@Html.DisplayFor(modelItem => item.Key.GroupName)
+						</td>
+					</tr>
+					@foreach (var price in item)
+					{
+						<tr>
+							<td class="product-name">
+								@Html.DisplayFor(modelItem => price.Name)
+							</td>
+							<td class="product-price">
+								@Html.DisplayFor(modelItem => price.Price)
+							</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
 
-<table class="table">
-	<tbody>
-		@foreach (var item in Model.Groups)
-		{
-			<tr>
-				<td colspan="2">
-					@Html.DisplayFor(modelItem => item.GroupName)
-				</td>
-			</tr>
-			@foreach (var price in item.Prices)
-			{
-				<tr>
-					<td>
-						@Html.DisplayFor(modelItem => price.Name)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => price.Price)
-					</td>
-				</tr>
-			}
-		}
-	</tbody>
-</table>
+	</div>
+
+	<div class="col">
+		<table class="table-borderless">
+			<tbody>
+				@foreach (var item in Model.Columns2.Groups)
+				{
+					<tr>
+						<td colspan="2" class="group-header">
+							@Html.DisplayFor(modelItem => item.Key.GroupName)
+						</td>
+					</tr>
+					@foreach (var price in item)
+					{
+						<tr>
+							<td class="product-name">
+								@Html.DisplayFor(modelItem => price.Name)
+							</td>
+							<td class="product-price">
+								@Html.DisplayFor(modelItem => price.Price)
+							</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+
+	</div>
+
+	<div class="col">
+		<table class="table-borderless">
+			<tbody>
+				@foreach (var item in Model.Columns3.Groups)
+				{
+					<tr>
+						<td colspan="2" class="group-header">
+							@Html.DisplayFor(modelItem => item.Key.GroupName)
+						</td>
+					</tr>
+					@foreach (var price in item)
+					{
+						<tr>
+							<td class="product-name">
+								@Html.DisplayFor(modelItem => price.Name)
+							</td>
+							<td class="product-price">
+								@Html.DisplayFor(modelItem => price.Price)
+							</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+
+	</div>
+
+</div>
