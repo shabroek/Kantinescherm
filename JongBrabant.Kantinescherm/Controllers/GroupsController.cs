@@ -5,63 +5,61 @@ using System.Threading.Tasks;
 using JongBrabant.Kantinescherm.Data;
 using JongBrabant.Kantinescherm.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace JongBrabant.Kantinescherm.Controllers
 {
-    public class PricesController : Controller
+    public class GroupsController : Controller
     {
         private readonly PriceListContext _context;
 
-        public PricesController(PriceListContext context)
+        public GroupsController(PriceListContext context)
         {
             _context = context;
         }
 
-        // GET: Prices
+        // GET: Groups
         public async Task<IActionResult> Index()
         {
-            var prices = new List<PriceEntry>();
+            var groups = new List<GroupEntry>();
 
             // This allows the home page to load if migrations have not been run yet.
             try
             {
-                prices = await _context.Prices.Include(x=> x.Group).ToListAsync();
+                groups = await _context.Groups.ToListAsync();
             }
             catch (Exception)
             {
-                return View(prices);
+                return View(groups);
             }
 
-            return View(prices);
+            return View(groups);
         }
 
-        // GET: Prices/Create
-        public async Task<IActionResult> Create()
+        // GET: Groups/Create
+        public IActionResult Create()
         {
-            ViewData["Groups"] = await _context.Groups.Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
             return View();
         }
 
-        // POST: Prices/Create
+        // POST: Groups/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Price,Group")] PriceEntry price)
+        public async Task<IActionResult> Create([Bind("GroupName")] GroupEntry group)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(price);
+                _context.Add(group);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(price);
+            return View(group);
         }
 
-        // GET: Prices/Edit/5
+        // GET: Groups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -69,22 +67,22 @@ namespace JongBrabant.Kantinescherm.Controllers
                 return NotFound();
             }
 
-            var price = await _context.Prices.FindAsync(id);
-            if (price == null)
+            var group = await _context.Groups.FindAsync(id);
+            if (group == null)
             {
                 return NotFound();
             }
-            return View(price);
+            return View(group);
         }
 
-        // POST: Prices/Edit/5
+        // POST: Groups/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,PriceId")] PriceEntry price)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Group,GroupId")] GroupEntry group)
         {
-            if (id != price.PriceId)
+            if (id != group.GroupId)
             {
                 return NotFound();
             }
@@ -93,12 +91,12 @@ namespace JongBrabant.Kantinescherm.Controllers
             {
                 try
                 {
-                    _context.Update(price);
+                    _context.Update(group);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PriceExists(price.PriceId))
+                    if (!GroupExists(group.GroupId))
                     {
                         return NotFound();
                     }
@@ -109,10 +107,10 @@ namespace JongBrabant.Kantinescherm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(price);
+            return View(group);
         }
 
-        // GET: Prices/Delete/5
+        // GET: Groups/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -120,33 +118,33 @@ namespace JongBrabant.Kantinescherm.Controllers
                 return NotFound();
             }
 
-            var price = await _context.Prices
-                .FirstOrDefaultAsync(m => m.PriceId == id);
-            if (price == null)
+            var group = await _context.Groups
+                .FirstOrDefaultAsync(m => m.GroupId == id);
+            if (group == null)
             {
                 return NotFound();
             }
 
-            return View(price);
+            return View(group);
         }
 
-        // POST: Prices/Delete/5
+        // POST: Groups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var price = await _context.Prices.FindAsync(id);
-            if (price != null)
+            var group = await _context.Groups.FindAsync(id);
+            if (group != null)
             {
-                _context.Prices.Remove(price);
+                _context.Groups.Remove(group);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PriceExists(int id)
+        private bool GroupExists(int id)
         {
-            return _context.Prices.Any(e => e.PriceId == id);
+            return _context.Groups.Any(e => e.GroupId == id);
         }
     }
 }

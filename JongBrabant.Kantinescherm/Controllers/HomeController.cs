@@ -1,12 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using JongBrabant.Kantinescherm.Data;
+using JongBrabant.Kantinescherm.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace JongBrabant.Kantinescherm.Controllers
 {
-    public class OverviewsController : Controller
+    public class OverviewController : Controller
     {
-        public IActionResult Index()
+        private readonly PriceListContext _pricesContext;
+
+        public OverviewController(PriceListContext pricesContext)
         {
-            return View();
+            _pricesContext = pricesContext;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var groups = await _pricesContext.Groups.Include(x => x.Prices).ToListAsync();
+            var priceList = new PriceList
+            {
+                Groups = groups
+            };
+
+            return View(priceList);
         }
     }
 }
