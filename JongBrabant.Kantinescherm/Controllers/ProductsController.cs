@@ -84,7 +84,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,ProductId,Group")] ProductEntry productEntry)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,ProductId,GroupId,Order")] ProductEntry productEntry)
         {
             if (id != productEntry.ProductId)
             {
