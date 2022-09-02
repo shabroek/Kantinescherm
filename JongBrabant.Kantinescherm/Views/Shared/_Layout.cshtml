@@ -19,9 +19,9 @@
 </head>
 <body>
     <header>
-	    @if (ViewContext.RouteData.Values["Controller"].ToString() != "Overview")
+	    @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Overview")
 	    {
-		    <nav class="navbar navbar-expand-sm navbar-toggler navbar-light bg-dark border-bottom box-shadow mb-3">
+		    <nav class="navbar navbar-expand-sm navbar-toggler navbar-light bg-light border-bottom box-shadow mb-3">
 			    <div class="container">
 				    <a class="navbar-brand" asp-area="" asp-controller="Overview" asp-action="Index">Prijslijst Jong Brabant</a>
 				    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -35,9 +35,6 @@
 						    </li>
 						    <li class="nav-item">
 							    <a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="Index">Groepen</a>
-						    </li>
-						    <li>
-							    @ViewContext.RouteData.Values["Controller"].ToString()
 						    </li>
 					    </ul>
 				    </div>
