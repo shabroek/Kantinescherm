@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JongBrabant.Kantinescherm.Controllers
 {
-    public class PricesController : Controller
+    public class ProductsController : Controller
     {
         private readonly PriceListContext _context;
 
-        public PricesController(PriceListContext context)
+        public ProductsController(PriceListContext context)
         {
             _context = context;
         }
@@ -22,19 +22,19 @@ namespace JongBrabant.Kantinescherm.Controllers
         // GET: Prices
         public async Task<IActionResult> Index()
         {
-            var prices = new List<PriceEntry>();
+            var products = new List<ProductEntry>();
 
             // This allows the home page to load if migrations have not been run yet.
             try
             {
-                prices = await _context.Prices.Include(x=> x.Group).ToListAsync();
+                products = await _context.Products.Include(x=> x.Group).ToListAsync();
             }
             catch (Exception)
             {
-                return View(prices);
+                return View(products);
             }
 
-            return View(prices);
+            return View(products);
         }
 
         // GET: Prices/Create
@@ -49,7 +49,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Price,Group")] PriceEntry entry)
+        public async Task<IActionResult> Create([Bind("Name,Price,Group,GroupId")] ProductEntry entry)
         {
             if (ModelState.IsValid)
             {
@@ -71,12 +71,12 @@ namespace JongBrabant.Kantinescherm.Controllers
 
             ViewData["Groups"] = await _context.Groups.Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
 
-            var price = await _context.Prices.FindAsync(id);
-            if (price == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(price);
+            return View(product);
         }
 
         // POST: Prices/Edit/5
@@ -84,9 +84,9 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,PriceId,Group")] PriceEntry priceEntry)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,PriceId,Group")] ProductEntry productEntry)
         {
-            if (id != priceEntry.PriceId)
+            if (id != productEntry.ProductId)
             {
                 return NotFound();
             }
@@ -95,12 +95,12 @@ namespace JongBrabant.Kantinescherm.Controllers
             {
                 try
                 {
-                    _context.Update(priceEntry);
+                    _context.Update(productEntry);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PriceExists(priceEntry.PriceId))
+                    if (!PriceExists(productEntry.ProductId))
                     {
                         return NotFound();
                     }
@@ -111,7 +111,7 @@ namespace JongBrabant.Kantinescherm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(priceEntry);
+            return View(productEntry);
         }
 
         // GET: Prices/Delete/5
@@ -122,14 +122,14 @@ namespace JongBrabant.Kantinescherm.Controllers
                 return NotFound();
             }
 
-            var price = await _context.Prices
-                .FirstOrDefaultAsync(m => m.PriceId == id);
-            if (price == null)
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductId == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(price);
+            return View(product);
         }
 
         // POST: Prices/Delete/5
@@ -137,10 +137,10 @@ namespace JongBrabant.Kantinescherm.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var price = await _context.Prices.FindAsync(id);
-            if (price != null)
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
             {
-                _context.Prices.Remove(price);
+                _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
@@ -148,7 +148,7 @@ namespace JongBrabant.Kantinescherm.Controllers
 
         private bool PriceExists(int id)
         {
-            return _context.Prices.Any(e => e.PriceId == id);
+            return _context.Products.Any(e => e.ProductId == id);
         }
     }
 }

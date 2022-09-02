@@ -23,43 +23,43 @@ public class PriceListContext : DbContext
                 GroupId = 2
             });
 
-        modelBuilder.Entity<PriceEntry>().HasData(new PriceEntry
+        modelBuilder.Entity<ProductEntry>().HasData(new ProductEntry
         {
             GroupId = 1,
-            PriceId = 1,
+            ProductId = 1,
             Name = "Coca Cola",
             Price = 1.8m
         },
-            new PriceEntry
+            new ProductEntry
             {
                 GroupId = 1,
-                PriceId = 2,
+                ProductId = 2,
                 Name = "Fanta",
                 Price = 1.8m
             },
-            new PriceEntry
+            new ProductEntry
             {
                 Name = "Kroket",
-                PriceId = 3,
+                ProductId = 3,
                 GroupId = 2,
                 Price = 2.1m
             },
-            new PriceEntry
+            new ProductEntry
             {
                 Name = "Frikadel",
-                PriceId = 4,
+                ProductId = 4,
                 GroupId = 2,
                 Price = 2.10m
             },
-            new PriceEntry
+            new ProductEntry
             {
                 Name = "Jong Brabant",
-                PriceId = 5,
+                ProductId = 5,
                 GroupId = 2,
                 Price = 3.5m
             });
     }
 
     public DbSet<GroupEntry> Groups { get; set; }
-    public DbSet<PriceEntry> Prices { get; set; }
+    public DbSet<ProductEntry> Products { get; set; }
 }

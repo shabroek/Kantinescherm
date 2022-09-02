@@ -58,7 +58,7 @@ namespace JongBrabant.Kantinescherm
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Prices}/{action=Index}/{id?}");
+                    pattern: "{controller=Products}/{action=Index}/{id?}");
             });
         }
     }

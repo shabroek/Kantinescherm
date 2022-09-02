@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace JongBrabant.Kantinescherm.Models;
 
-public class PriceEntry
+public class ProductEntry
 {
     [Key]
-    public int PriceId { get; set; }
+    public int ProductId { get; set; }
 
     public int GroupId { get; set; }
     public GroupEntry Group { get; set; }

@@ -3,6 +3,7 @@ using JongBrabant.Kantinescherm.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JongBrabant.Kantinescherm.Migrations
 {
     [DbContext(typeof(PriceListContext))]
-    partial class PriceListContextModelSnapshot : ModelSnapshot
+    [Migration("20220902120358_Rename Prices to Products")]
+    partial class RenamePricestoProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

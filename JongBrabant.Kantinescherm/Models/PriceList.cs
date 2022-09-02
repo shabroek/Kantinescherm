@@ -12,5 +12,5 @@ public class PriceList
 
 public class PriceListColumn
 {
-    public List<IGrouping<GroupEntry, PriceEntry>> Groups { get; set; }
+    public List<IGrouping<GroupEntry, ProductEntry>> Groups { get; set; }
 }
