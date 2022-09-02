@@ -51,6 +51,11 @@ namespace JongBrabant.Kantinescherm.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (group.Order == 0)
+                {
+                    group.Order = _context.Groups.Max(x => x.Order) + 10;
+                }
+
                 _context.Add(group);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

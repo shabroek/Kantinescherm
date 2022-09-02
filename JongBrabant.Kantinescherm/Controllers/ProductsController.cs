@@ -41,6 +41,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         public async Task<IActionResult> Create()
         {
             ViewData["Groups"] = await _context.Groups.Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
+           
             return View();
         }
 
@@ -53,6 +54,12 @@ namespace JongBrabant.Kantinescherm.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (entry.Order == 0)
+                {
+                    entry.Order = _context.Products.Where(x=> x.GroupId == entry.GroupId).OrderByDescending(x => x.Order).Select(x=> x.Order)
+                        .FirstOrDefault() + 10;
+                }
+
                 _context.Add(entry);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
