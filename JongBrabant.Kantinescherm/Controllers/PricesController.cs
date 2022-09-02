@@ -49,16 +49,16 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Price,Group")] PriceEntry price)
+        public async Task<IActionResult> Create([Bind("Name,Price,Group")] PriceEntry entry)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(price);
+                _context.Add(entry);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(price);
+            return View(entry);
         }
 
         // GET: Prices/Edit/5
@@ -68,6 +68,8 @@ namespace JongBrabant.Kantinescherm.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["Groups"] = await _context.Groups.Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
 
             var price = await _context.Prices.FindAsync(id);
             if (price == null)
@@ -82,9 +84,9 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,PriceId")] PriceEntry price)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,PriceId,Group")] PriceEntry priceEntry)
         {
-            if (id != price.PriceId)
+            if (id != priceEntry.PriceId)
             {
                 return NotFound();
             }
@@ -93,12 +95,12 @@ namespace JongBrabant.Kantinescherm.Controllers
             {
                 try
                 {
-                    _context.Update(price);
+                    _context.Update(priceEntry);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PriceExists(price.PriceId))
+                    if (!PriceExists(priceEntry.PriceId))
                     {
                         return NotFound();
                     }
@@ -109,7 +111,7 @@ namespace JongBrabant.Kantinescherm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(price);
+            return View(priceEntry);
         }
 
         // GET: Prices/Delete/5
