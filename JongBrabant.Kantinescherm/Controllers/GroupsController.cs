@@ -26,7 +26,7 @@ namespace JongBrabant.Kantinescherm.Controllers
             // This allows the home page to load if migrations have not been run yet.
             try
             {
-                groups = await _context.Groups.ToListAsync();
+                groups = await _context.Groups.OrderBy(x=> x.Order).ToListAsync();
             }
             catch (Exception)
             {
@@ -47,7 +47,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GroupName")] GroupEntry group)
+        public async Task<IActionResult> Create([Bind("GroupName,Order")] GroupEntry group)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +80,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Group,GroupId,Order")] GroupEntry group)
+        public async Task<IActionResult> Edit(int id, [Bind("GroupName,Group,GroupId,Order")] GroupEntry group)
         {
             if (id != group.GroupId)
             {
