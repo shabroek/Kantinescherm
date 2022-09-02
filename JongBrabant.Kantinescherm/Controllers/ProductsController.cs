@@ -27,7 +27,7 @@ namespace JongBrabant.Kantinescherm.Controllers
             // This allows the home page to load if migrations have not been run yet.
             try
             {
-                products = await _context.Products.Include(x=> x.Group).ToListAsync();
+                products = await _context.Products.OrderBy(x => x.Group.Order).ThenBy(x=> x.Order).Include(x => x.Group).ToListAsync();
             }
             catch (Exception)
             {
@@ -84,7 +84,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,PriceId,Group")] ProductEntry productEntry)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,ProductId,Group")] ProductEntry productEntry)
         {
             if (id != productEntry.ProductId)
             {

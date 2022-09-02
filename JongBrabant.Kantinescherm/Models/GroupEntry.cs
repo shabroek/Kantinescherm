@@ -7,7 +7,7 @@ public class GroupEntry
 {
     [Key]
     public int GroupId { get; set; }
-
     public IEnumerable<ProductEntry> Prices { get; set; }
     public string GroupName { get; set; }
+    public int Order { get; set; }
 }

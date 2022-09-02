@@ -19,7 +19,7 @@ namespace JongBrabant.Kantinescherm.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var prices = await _pricesContext.Products.Include(x => x.Group).ToListAsync();
+            var prices = await _pricesContext.Products.OrderBy(x => x.Group.Order).ThenBy(x => x.Order).Include(x => x.Group).ToListAsync();
             var numberOfPrices = (int)Math.Floor(prices.Count / 3m);
             var rest = prices.Count % 3;
 
