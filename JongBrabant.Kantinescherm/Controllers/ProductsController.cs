@@ -17,6 +17,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         public ProductsController(PriceListContext context)
         {
             _context = context;
+            ViewData["IsManagement"] = true;
         }
 
         // GET: Prices

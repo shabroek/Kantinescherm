@@ -16,6 +16,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         public GroupsController(PriceListContext context)
         {
             _context = context;
+            ViewData["IsManagement"] = true;
         }
 
         // GET: Groups
