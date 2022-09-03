@@ -117,7 +117,7 @@ th {
 
 .setting {
     position: absolute;
-    bottom: 20px;
+    bottom: 25px;
     right: 0;
     /* Set the fixed height of the footer here */
     height: 50px;

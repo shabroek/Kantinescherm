@@ -7,17 +7,19 @@ using JongBrabant.Kantinescherm.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace JongBrabant.Kantinescherm.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly PriceListContext _context;
+        private readonly IMemoryCache _cache;
 
-        public ProductsController(PriceListContext context)
+        public ProductsController(PriceListContext context, IMemoryCache cache)
         {
             _context = context;
-            ViewData["IsManagement"] = true;
+            _cache = cache;
         }
 
         // GET: Prices
@@ -41,7 +43,8 @@ namespace JongBrabant.Kantinescherm.Controllers
         // GET: Products/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["Groups"] = await _context.Groups.OrderBy(x => x.Order).Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
+            var selectedGroup = _cache.Get<int>("Group");
+            ViewData["Groups"] = await _context.Groups.OrderBy(x => x.Order).Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString(), selectedGroup == x.GroupId)).ToListAsync();
 
             return View();
         }
@@ -60,6 +63,8 @@ namespace JongBrabant.Kantinescherm.Controllers
                     entry.Order = _context.Products.Where(x => x.GroupId == entry.GroupId).OrderByDescending(x => x.Order).Select(x => x.Order)
                         .FirstOrDefault() + 10;
                 }
+
+                _cache.Set("Group", entry.GroupId);
 
                 _context.Add(entry);
                 await _context.SaveChangesAsync();
@@ -173,7 +178,7 @@ namespace JongBrabant.Kantinescherm.Controllers
                 }
             }
 
-            await  _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
