@@ -48,7 +48,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GroupName,Order")] GroupEntry group)
+        public async Task<IActionResult> Create([Bind("GroupName,Order,ShowHeader")] GroupEntry group)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GroupName,Group,GroupId,Order")] GroupEntry group)
+        public async Task<IActionResult> Edit(int id, [Bind("GroupName,Group,GroupId,Order,ShowHeader")] GroupEntry group)
         {
             if (id != group.GroupId)
             {

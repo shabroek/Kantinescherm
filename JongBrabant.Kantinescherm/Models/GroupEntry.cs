@@ -13,4 +13,7 @@ public class GroupEntry
     public string GroupName { get; set; }
     [DisplayName("Volgorde")]
     public int Order { get; set; }
+
+    [DisplayName("Toon titel")]
+    public bool ShowHeader { get; set; }
 }

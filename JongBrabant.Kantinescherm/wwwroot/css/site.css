@@ -5,7 +5,6 @@ a.navbar-brand {
     white-space: normal;
     text-align: center;
     word-break: break-all;
-    background-color: #ffffff;
     color: #b50102;
 }
 
@@ -37,7 +36,7 @@ html {
 
 @media (min-width: 1200px) {
     html {
-        font-size: 20px;
+        font-size: 22px;
     }
 }
 
@@ -96,8 +95,9 @@ body {
 .group-header {
     color: #b50102;
     text-transform: uppercase;
-    font-size: 1.3em;
+    font-size: 1.8em;
 }
+
 
 .price-column {
     width: 100%;
@@ -116,22 +116,31 @@ th {
 }
 
 .setting {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    /* Set the fixed height of the footer here */
-    /* Vertically center the text there */
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    width: 60px;
+    height: 70px;
+    padding: 10px;
 }
 
 .setting-image {
     width: 40px;
     height: 50px;
-    margin: 10px;
+}
+
+.table-borderless {
+    height: 100%;
 }
 
 .middle-column {
-    padding: 0 40px;
-    margin: 0 30px;
+    padding: 0 20px;
+    margin: 0 10px;
     border-right: 2px solid #b50102;
     border-left: 2px solid #b50102;
+}
+
+.empty-line {
+    height: 18px;
+    line-height: 0;
 }

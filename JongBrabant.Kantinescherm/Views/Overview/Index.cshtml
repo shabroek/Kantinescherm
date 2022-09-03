@@ -10,9 +10,18 @@
 				@foreach (var item in Model.Columns1.Groups)
 				{
 					<tr>
-						<td colspan="2" class="group-header">
-							@Html.DisplayFor(modelItem => item.Key.GroupName)
-						</td>
+						@if (item.Key.ShowHeader)
+						{
+							<td colspan="2" class="group-header">
+								@Html.DisplayFor(modelItem => item.Key.GroupName)
+							</td>
+						}
+						else
+						{
+							<td colspan="2" class="empty-line">
+								
+							</td>
+						}
 					</tr>
 					@foreach (var price in item)
 					{
@@ -31,15 +40,24 @@
 
 	</div>
 
-	<div class="col middle-column offset-2" >
+	<div class="col middle-column" >
 		<table class="table-borderless price-column">
 			<tbody>
 				@foreach (var item in Model.Columns2.Groups)
 				{
 					<tr>
-						<td colspan="2" class="group-header">
-							@Html.DisplayFor(modelItem => item.Key.GroupName)
-						</td>
+						@if (item.Key.ShowHeader)
+						{
+							<td colspan="2" class="group-header">
+								@Html.DisplayFor(modelItem => item.Key.GroupName)
+							</td>
+						}
+						else
+						{
+							<td colspan="2" class="empty-line">
+								
+							</td>
+						}
 					</tr>
 					@foreach (var price in item)
 					{
@@ -64,9 +82,18 @@
 				@foreach (var item in Model.Columns3.Groups)
 				{
 					<tr>
-						<td colspan="2" class="group-header">
-							@Html.DisplayFor(modelItem => item.Key.GroupName)
-						</td>
+						@if (item.Key.ShowHeader)
+						{
+							<td colspan="2" class="group-header">
+								@Html.DisplayFor(modelItem => item.Key.GroupName)
+							</td>
+						}
+						else
+						{
+							<td colspan="2" class="empty-line">
+								
+							</td>
+						}
 					</tr>
 					@foreach (var price in item)
 					{

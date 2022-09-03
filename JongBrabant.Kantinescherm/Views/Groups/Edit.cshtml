@@ -14,14 +14,20 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="GroupId" />
             <div class="form-group">
-	            <label value="Naam" class="control-label"></label>
+                <label asp-for="GroupName" class="control-label"></label>
 	            <input asp-for="GroupName" class="form-control" />
 	            <span asp-validation-for="GroupName" class="text-danger"></span>
             </div>
             <div class="form-group">
-	            <label value="Volgorde" class="control-label"></label>
+                <label asp-for="Order" class="control-label"></label>
 	            <input asp-for="Order" class="form-control" />
 	            <span asp-validation-for="Order" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+	            <label asp-for="ShowHeader" class="control-label"></label>
+	            <input asp-for="ShowHeader" class="form-control" />
+	            <span asp-validation-for="ShowHeader" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Opslaan" class="btn btn-primary" />
