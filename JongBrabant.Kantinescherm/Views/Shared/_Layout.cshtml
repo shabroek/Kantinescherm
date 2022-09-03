@@ -42,17 +42,22 @@
 		    </nav>
 	    }
     </header>
-    <div class="container-fluid">
-	    <main role="main" class="pb-3">
-		    @RenderBody()
-	    </main>
+<div class="container-fluid">
+	<main role="main" class="pb-3">
+		@RenderBody()
+	</main>
         
-	    <div class="white-background">
+	<div class="white-background">
 
-	    </div>
-    </div>
+	</div>
+</div>
 
-    <environment include="Development">
+
+<div class="setting">
+	<a asp-action="Index" asp-controller="Products"><img class="setting-image" src='./logo.png' alt="alternative text" /></a>
+</div>
+
+<environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     </environment>

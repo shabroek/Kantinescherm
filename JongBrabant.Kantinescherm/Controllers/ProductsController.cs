@@ -28,7 +28,7 @@ namespace JongBrabant.Kantinescherm.Controllers
             // This allows the home page to load if migrations have not been run yet.
             try
             {
-                products = await _context.Products.OrderBy(x => x.Group.Order).ThenBy(x=> x.Order).Include(x => x.Group).ToListAsync();
+                products = await _context.Products.OrderBy(x => x.Group.Order).ThenBy(x => x.Order).Include(x => x.Group).ToListAsync();
             }
             catch (Exception)
             {
@@ -41,8 +41,8 @@ namespace JongBrabant.Kantinescherm.Controllers
         // GET: Products/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["Groups"] = await _context.Groups.Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
-           
+            ViewData["Groups"] = await _context.Groups.OrderBy(x => x.Order).Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
+
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace JongBrabant.Kantinescherm.Controllers
             {
                 if (entry.Order == 0)
                 {
-                    entry.Order = _context.Products.Where(x=> x.GroupId == entry.GroupId).OrderByDescending(x => x.Order).Select(x=> x.Order)
+                    entry.Order = _context.Products.Where(x => x.GroupId == entry.GroupId).OrderByDescending(x => x.Order).Select(x => x.Order)
                         .FirstOrDefault() + 10;
                 }
 
@@ -77,7 +77,7 @@ namespace JongBrabant.Kantinescherm.Controllers
                 return NotFound();
             }
 
-            ViewData["Groups"] = await _context.Groups.Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
+            ViewData["Groups"] = await _context.Groups.OrderBy(x => x.Order).Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
 
             var product = await _context.Products.FindAsync(id);
             if (product == null)
@@ -160,5 +160,22 @@ namespace JongBrabant.Kantinescherm.Controllers
         }
 
         // POST: P
+        public async Task<IActionResult> Order()
+        {
+            int groupOrder = 0;
+            foreach (var group in _context.Groups.OrderBy(x => x.Order).Include(x => x.Products))
+            {
+                group.Order = groupOrder += 10;
+                int productOrder = 0;
+                foreach (var product in group.Products.OrderBy(x => x.Order))
+                {
+                    product.Order = productOrder += 10;
+                }
+            }
+
+            await  _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
