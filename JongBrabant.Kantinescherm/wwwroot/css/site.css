@@ -117,8 +117,8 @@ th {
 
 .setting {
     position: fixed;
-    right: 0px;
-    bottom: 0px;
+    right: 0;
+    bottom: 0;
     width: 60px;
     height: 70px;
     padding: 10px;
