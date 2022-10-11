@@ -12,8 +12,11 @@
                     <tr>
                         @if (item.Key.ShowHeader)
                         {
-                            <td colspan="2" class="group-header">
-                                @Html.DisplayFor(modelItem => item.Key.GroupName)
+                            <td class="group-header">
+                               @Html.DisplayFor(modelItem => item.Key.GroupName)
+                            </td>
+                            <td class="product-price">
+                                <a asp-action="Index" asp-controller="Products"><img class="setting-image" src='./logo.png' alt="alternative text" /></a>
                             </td>
                         }
                         else
@@ -47,8 +50,11 @@
                     <tr>
                         @if (item.Key.ShowHeader)
                         {
-                            <td colspan="2" class="group-header">
+                            <td class="group-header">
                                 @Html.DisplayFor(modelItem => item.Key.GroupName)
+                            </td>
+                            <td class="product-price">
+                                <a asp-action="Index" asp-controller="Products"><img class="setting-image" src='./logo.png' alt="alternative text" /></a>
                             </td>
                         }
                         else
@@ -82,8 +88,11 @@
                     <tr>
                         @if (item.Key.ShowHeader)
                         {
-                            <td colspan="2" class="group-header">
+                            <td class="group-header">
                                 @Html.DisplayFor(modelItem => item.Key.GroupName)
+                            </td>
+                            <td class="product-price">
+                                <a asp-action="Index" asp-controller="Products"><img class="setting-image" src='./logo.png' alt="alternative text" /></a>
                             </td>
                         }
                         else
