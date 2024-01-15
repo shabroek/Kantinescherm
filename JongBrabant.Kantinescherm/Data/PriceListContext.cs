@@ -12,6 +12,17 @@ public class PriceListContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<PriceList>().HasData(new PriceList
+            {
+                PriceListId = 1,
+                Name = "Kantine"
+            },
+            new PriceList
+            {
+                PriceListId = 2,
+                Name = "Smulhoek"
+            });
+
         modelBuilder.Entity<GroupEntry>().HasData(new GroupEntry
         {
             GroupId = 1,
@@ -60,6 +71,7 @@ public class PriceListContext : DbContext
             });
     }
 
+    public DbSet<PriceList> PriceLists { get; set; }
     public DbSet<GroupEntry> Groups { get; set; }
     public DbSet<ProductEntry> Products { get; set; }
 }

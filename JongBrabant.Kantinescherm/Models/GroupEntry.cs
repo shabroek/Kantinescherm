@@ -16,4 +16,7 @@ public class GroupEntry
 
     [DisplayName("Toon titel")]
     public bool ShowHeader { get; set; }
+
+    public int PriceListId { get; set; }
+    public PriceList PriceList { get; set; }
 }

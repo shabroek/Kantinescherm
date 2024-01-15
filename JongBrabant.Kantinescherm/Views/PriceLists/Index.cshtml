@@ -1,0 +1,59 @@
+﻿@model JongBrabant.Kantinescherm.Models.PriceListView
+
+@{
+    ViewData["Title"] = "Prijslijst Jong Brabant";
+}<div class="row" onclick="changeToFullScreen()">
+    @foreach (var column in Model.Columns)
+    {
+        <div class="col @(column.GetColumnClass())">
+            <table class="table-borderless price-column">
+                <tbody>
+                @foreach (var item in column.Groups)
+                {
+                    <tr>
+                        @if (item.Key.ShowHeader)
+                        {
+                            <td class="group-header">
+                                @Html.DisplayFor(modelItem => item.Key.GroupName)
+                            </td>
+                            <td class="product-price">
+                                <a asp-action="Index" asp-controller="Products"><img class="setting-image" src='./logo.png' alt="alternative text"/></a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td colspan="2" class="empty-line">
+                            </td>
+                        }
+                    </tr>
+                    @foreach (var price in item)
+                    {
+                        <tr>
+                            <td class="product-name">
+                                @Html.DisplayFor(modelItem => price.Name)
+                            </td>
+                            <td class="product-price">
+                                @Html.DisplayFor(modelItem => price.Price)
+                            </td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        function changeToFullScreen() {
+            document.body.requestFullscreen();
+
+            var vsButton = document.getelementById("fsButton");
+            vsButton.hidden = true;
+
+        }
+    </script>
+}

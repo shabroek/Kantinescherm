@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JongBrabant.Kantinescherm.Data;
 using JongBrabant.Kantinescherm.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace JongBrabant.Kantinescherm.Controllers
@@ -27,7 +28,7 @@ namespace JongBrabant.Kantinescherm.Controllers
             // This allows the home page to load if migrations have not been run yet.
             try
             {
-                groups = await _context.Groups.OrderBy(x=> x.Order).ToListAsync();
+                groups = await _context.Groups.OrderBy(x => x.Order).Include(x => x.PriceList).ToListAsync();
             }
             catch (Exception)
             {
@@ -73,6 +74,10 @@ namespace JongBrabant.Kantinescherm.Controllers
                 return NotFound();
             }
 
+            ViewData["PriceLists"] = await _context.PriceLists.OrderBy(x => x.PriceListId)
+                .Select(x => new SelectListItem(x.Name, x.PriceListId.ToString()))
+                .ToListAsync();
+
             var group = await _context.Groups.FindAsync(id);
             if (group == null)
             {
@@ -86,7 +91,7 @@ namespace JongBrabant.Kantinescherm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GroupName,Group,GroupId,Order,ShowHeader")] GroupEntry group)
+        public async Task<IActionResult> Edit(int id, [Bind("GroupName,Group,PriceListId,GroupId,Order,ShowHeader")] GroupEntry group)
         {
             if (id != group.GroupId)
             {

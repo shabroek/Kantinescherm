@@ -19,12 +19,14 @@
 </head>
 <body>
     <header>
-	    @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Overview")
+	    @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "PriceLists")
 	    {
 		    <nav class="navbar navbar-expand-sm navbar-toggler navbar-light bg-light border-bottom box-shadow mb-3">
 			    <div class="container">
-				    <a class="navbar-brand" asp-area="" asp-controller="Overview" asp-action="Index">Prijslijst Jong Brabant</a>
-				    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    <a class="navbar-brand" asp-area="" asp-controller="PriceLists" asp-action="Index" asp-route-priceListId="1">Kantine</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="PriceLists" asp-action="Index" asp-route-priceListId="2">Smulhoek</a>
+                    
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 				            aria-expanded="false" aria-label="Toggle navigation">
 					    <span class="navbar-toggler-icon"></span>
 				    </button>
