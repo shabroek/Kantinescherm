@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Http;
 
 namespace JongBrabant.Kantinescherm.Controllers
 {
@@ -15,6 +16,8 @@ namespace JongBrabant.Kantinescherm.Controllers
     {
         private readonly PriceListContext _context;
         private readonly IMemoryCache _cache;
+        private const string EditPassword = "OrjanGame";
+        private const string SessionKey = "IsEditor";
 
         public ProductsController(PriceListContext context, IMemoryCache cache)
         {
@@ -22,12 +25,35 @@ namespace JongBrabant.Kantinescherm.Controllers
             _cache = cache;
         }
 
+        private bool IsEditor()
+        {
+            return HttpContext.Session.GetString(SessionKey) == "true";
+        }
+
+        private IActionResult PasswordPrompt(string returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View("PasswordPrompt");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PasswordPrompt(string password, string returnUrl)
+        {
+            if (password == EditPassword)
+            {
+                HttpContext.Session.SetString(SessionKey, "true");
+                return Redirect(returnUrl);
+            }
+            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["Error"] = "Wachtwoord onjuist.";
+            return View();
+        }
+
         // GET: Prices
         public async Task<IActionResult> Index()
         {
             var products = new List<ProductEntry>();
-
-            // This allows the home page to load if migrations have not been run yet.
             try
             {
                 products = await _context.Products.OrderBy(x => x.Group.Order).ThenBy(x => x.Order).Include(x => x.Group).ToListAsync();
@@ -36,31 +62,37 @@ namespace JongBrabant.Kantinescherm.Controllers
             {
                 return View(products);
             }
-
             return View(products);
         }
 
         // GET: Products/Create
         public async Task<IActionResult> Create()
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Create", "Products"));
+
             var selectedGroup = _cache.Get<int>("Group");
-            ViewData["Groups"] = await _context.Groups.OrderBy(x => x.Order).Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString(), selectedGroup == x.GroupId)).ToListAsync();
+            ViewData["Groups"] = await _context.Groups.OrderBy(x => x.Order)
+                .Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString(), selectedGroup == x.GroupId))
+                .ToListAsync();
 
             return View();
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Price,Group,GroupId,Order")] ProductEntry entry)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Create", "Products"));
+
             if (ModelState.IsValid)
             {
                 if (entry.Order == 0)
                 {
-                    entry.Order = _context.Products.Where(x => x.GroupId == entry.GroupId).OrderByDescending(x => x.Order).Select(x => x.Order)
+                    entry.Order = _context.Products.Where(x => x.GroupId == entry.GroupId)
+                        .OrderByDescending(x => x.Order).Select(x => x.Order)
                         .FirstOrDefault() + 10;
                 }
 
@@ -77,12 +109,17 @@ namespace JongBrabant.Kantinescherm.Controllers
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Edit", "Products", new { id }));
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            ViewData["Groups"] = await _context.Groups.OrderBy(x => x.Order).Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString())).ToListAsync();
+            ViewData["Groups"] = await _context.Groups.OrderBy(x => x.Order)
+                .Select(x => new SelectListItem(x.GroupName, x.GroupId.ToString()))
+                .ToListAsync();
 
             var product = await _context.Products.FindAsync(id);
             if (product == null)
@@ -93,12 +130,13 @@ namespace JongBrabant.Kantinescherm.Controllers
         }
 
         // POST: Products/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Name,Price,ProductId,GroupId,Order")] ProductEntry productEntry)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Edit", "Products", new { id }));
+
             if (id != productEntry.ProductId)
             {
                 return NotFound();
@@ -130,6 +168,9 @@ namespace JongBrabant.Kantinescherm.Controllers
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Delete", "Products", new { id }));
+
             if (id == null)
             {
                 return NotFound();
@@ -150,6 +191,9 @@ namespace JongBrabant.Kantinescherm.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Delete", "Products", new { id }));
+
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {

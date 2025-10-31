@@ -21,6 +21,7 @@ namespace JongBrabant.Kantinescherm
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSession();
 
             services.AddDbContext<PriceListContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
@@ -43,6 +44,7 @@ namespace JongBrabant.Kantinescherm
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 

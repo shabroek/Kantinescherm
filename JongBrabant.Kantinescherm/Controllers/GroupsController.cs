@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JongBrabant.Kantinescherm.Data;
 using JongBrabant.Kantinescherm.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ namespace JongBrabant.Kantinescherm.Controllers
     public class GroupsController : Controller
     {
         private readonly PriceListContext _context;
+        private const string EditPassword = "OrjanGame";
+        private const string SessionKey = "IsEditor";
 
         public GroupsController(PriceListContext context)
         {
@@ -20,12 +23,35 @@ namespace JongBrabant.Kantinescherm.Controllers
             ViewData["IsManagement"] = true;
         }
 
+        private bool IsEditor()
+        {
+            return HttpContext.Session.GetString(SessionKey) == "true";
+        }
+
+        private IActionResult PasswordPrompt(string returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View("PasswordPrompt");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PasswordPrompt(string password, string returnUrl)
+        {
+            if (password == EditPassword)
+            {
+                HttpContext.Session.SetString(SessionKey, "true");
+                return Redirect(returnUrl);
+            }
+            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["Error"] = "Wachtwoord onjuist.";
+            return View();
+        }
+
         // GET: Groups
         public async Task<IActionResult> Index()
         {
             var groups = new List<GroupEntry>();
-
-            // This allows the home page to load if migrations have not been run yet.
             try
             {
                 groups = await _context.Groups.OrderBy(x => x.Order).Include(x => x.PriceList).ToListAsync();
@@ -34,23 +60,25 @@ namespace JongBrabant.Kantinescherm.Controllers
             {
                 return View(groups);
             }
-
             return View(groups);
         }
 
         // GET: Groups/Create
         public IActionResult Create()
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Create", "Groups"));
             return View();
         }
 
         // POST: Groups/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("GroupName,Order,ShowHeader")] GroupEntry group)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Create", "Groups"));
+
             if (ModelState.IsValid)
             {
                 if (group.Order == 0)
@@ -69,6 +97,9 @@ namespace JongBrabant.Kantinescherm.Controllers
         // GET: Groups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Edit", "Groups", new { id }));
+
             if (id == null)
             {
                 return NotFound();
@@ -87,12 +118,13 @@ namespace JongBrabant.Kantinescherm.Controllers
         }
 
         // POST: Groups/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("GroupName,Group,PriceListId,GroupId,Order,ShowHeader")] GroupEntry group)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Edit", "Groups", new { id }));
+
             if (id != group.GroupId)
             {
                 return NotFound();
@@ -124,6 +156,9 @@ namespace JongBrabant.Kantinescherm.Controllers
         // GET: Groups/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Delete", "Groups", new { id }));
+
             if (id == null)
             {
                 return NotFound();
@@ -144,6 +179,9 @@ namespace JongBrabant.Kantinescherm.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!IsEditor())
+                return PasswordPrompt(Url.Action("Delete", "Groups", new { id }));
+
             var group = await _context.Groups.FindAsync(id);
             if (group != null)
             {
