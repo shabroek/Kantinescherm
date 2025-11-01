@@ -2,19 +2,21 @@
 
 @{
     ViewData["Title"] = "Prijslijsten Jong Brabant";
-}<div class="row" >
-    
-    @foreach (var item in Model)
-    {
+}
+<div class="row">
     <div class="col">
-   
         <div class="pricelist-link">
-            <a asp-action="Index" asp-controller="PriceLists" asp-route-priceListId="@item.PriceListId">
-                @Html.DisplayFor(modelItem => item.Name)
-
-            </a>
+            <a asp-action="Index" asp-controller="PriceLists">Alles</a>
         </div>
     </div>
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="pricelist-link">
+                <a asp-action="Index" asp-controller="PriceLists" asp-route-priceListId="@item.PriceListId">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </a>
+            </div>
+        </div>
     }
-
 </div>

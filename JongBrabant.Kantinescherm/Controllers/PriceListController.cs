@@ -18,16 +18,20 @@ namespace JongBrabant.Kantinescherm.Controllers
             _pricesContext = pricesContext;
         }
 
-        public async Task<IActionResult> Index(int priceListId, int numberOfColumns = 3)
+        public async Task<IActionResult> Index(int? priceListId, int numberOfColumns = 3)
         {
-            var products = await _pricesContext.Products
-                .Where(x => x.Group.PriceList.PriceListId == priceListId)
+            IQueryable<ProductEntry> query = _pricesContext.Products
                 .OrderBy(x => x.Group.Order)
                 .ThenBy(x => x.Order)
                 .Include(x => x.Group)
-                .ThenInclude(x => x.PriceList)
-                .ToListAsync();
+                .ThenInclude(x => x.PriceList);
 
+            if (priceListId.HasValue)
+            {
+                query = query.Where(x => x.Group.PriceList.PriceListId == priceListId.Value);
+            }
+
+            var products = await query.ToListAsync();
             var numberOfProductsPerRow = (int)Math.Floor((products.Count) / (decimal)numberOfColumns);
 
             var priceList = new PriceListView
